@@ -1,0 +1,51 @@
+batch_size: 4
+iters: 30000
+
+train_dataset:
+  type: Dataset
+  dataset_root: ./dataset/smoke_dataset/
+  train_path: ./dataset/smoke_dataset/train.txt
+  num_classes: 2
+  transforms:
+    - type: Resize
+      target_size: [512, 512]
+      interp: RANDOM
+    - type: RandomHorizontalFlip
+    - type: RandomRotation
+      max_rotation: 90
+    - type: Resize
+      target_size: [512, 512]  
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: Dataset
+  dataset_root: ./dataset/smoke_dataset/
+  val_path: ./dataset/smoke_dataset/val.txt
+  num_classes: 2
+  transforms:
+    - type: Resize
+      target_size: [512, 512]
+    - type: Normalize
+  mode: val
+
+
+optimizer:
+  type: sgd
+  momentum: 0.9
+  weight_decay: 4.0e-5
+
+lr_scheduler:
+  type: PolynomialDecay
+  learning_rate: 0.001
+  end_lr: 0
+  power: 0.9
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+  coef: [1]
